@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\DashboardController;
 // });
 
 Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class,'index']);
+Route::get('/collections', [App\Http\Controllers\Frontend\FrontendController::class,'categories']);
 
 Route::view('/livewire','livewire');
 Route::view('/registration','registration');
@@ -67,6 +68,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function () {
         Route::put('/sliders/update/{slider}', 'update');
         Route::get('/sliders/delete/{slider}', 'delete');
     });
+
 
 });
 

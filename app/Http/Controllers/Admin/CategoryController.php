@@ -29,9 +29,9 @@ class CategoryController extends Controller
             $file = $request->file('images');
             $ext = $file->getClientOriginalExtension();
             $filename = time(). "." .$ext;  
-
-            $file->move('uploads/category',$filename);
-            $category->images = $filename;
+            $path = 'uploads/category/';
+            $file->move('uploads/category/',$filename);
+            $category->images = $path.$filename;
         }
         $category->meta_title = $validated_data['meta_title'];
         $category->meta_keyword = $validated_data['meta_keyword'];
@@ -64,12 +64,13 @@ class CategoryController extends Controller
             if(File::exists($path)){
                 File::delete($path);
             }
+            $uploadPath = 'uploads/category/';
             $file = $request->file('images');
             $ext = $file->getClientOriginalExtension();
             $filename = time(). "." .$ext;  
 
-            $file->move('uploads/category',$filename);
-            $category->images = $filename;
+            $file->move('uploads/category/',$filename);
+            $category->images =  $uploadPath.$filename;
         }
         $category->meta_title = $validated_data['meta_title'];
         $category->meta_keyword = $validated_data['meta_keyword'];
