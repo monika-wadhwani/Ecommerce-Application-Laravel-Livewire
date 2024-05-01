@@ -34,7 +34,7 @@ class ProductFormRequest extends FormRequest
             'status'=>'nullable',
             'quantity'=>'required|integer',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp',
             'meta_title'=>'required|string',
             'meta_keyword'=>'required|string',
             'meta_description'=>'required|string',

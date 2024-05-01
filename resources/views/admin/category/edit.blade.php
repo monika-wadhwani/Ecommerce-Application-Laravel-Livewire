@@ -32,7 +32,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="mb-2">Image</label>
                                 <input type="file" name="images" class="form-control form-group">
-                                <img src="{{ asset('uploads/category/'. $category->images) }}" width="60px" height="60px">
+                                <img src="{{ asset($category->images) }}" width="60px" height="60px">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="mb-2">Status</label>

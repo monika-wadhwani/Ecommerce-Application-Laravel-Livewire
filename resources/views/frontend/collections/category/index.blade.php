@@ -10,7 +10,7 @@
                 <div class="col-md-12">
                     <h4 class="mb-4">
                     Our Categories
-                    </h4>  
+                    </h4>               
                 </div>
                 @forelse ($categories as $category)
                 <div class="col-6 col-md-3">

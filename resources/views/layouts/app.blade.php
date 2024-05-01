@@ -11,6 +11,10 @@
 
     <title>@yield('title')</title>
 
+    <meta name="meta_keyword" content="@yield('meta_keyword')">
+
+    <meta name="meta_description" content="@yield('meta_description')">
+
     <!-- Fonts -->
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="dns-prefetch" href="//fonts.bunny.net">

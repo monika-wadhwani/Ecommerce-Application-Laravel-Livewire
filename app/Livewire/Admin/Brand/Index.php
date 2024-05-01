@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Brand;
 use App\Models\Brand;
 
 use Livewire\Component;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Illuminate\Validation\Rule as ValidationRule;
@@ -33,7 +34,8 @@ class Index extends Component
     public function render()
     {
         $brands = Brand::orderBy('id','Desc')->paginate(5);
-        return view('livewire.admin.brand.index',['brands'=> $brands])->extends('layouts.admin')->section('content');
+        $category = Category::get();
+        return view('livewire.admin.brand.index',['brands'=> $brands,'category'=> $category])->extends('layouts.admin')->section('content');
     }
     public function store(){
      

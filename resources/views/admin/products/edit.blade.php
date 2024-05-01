@@ -23,7 +23,7 @@
                             @endforeach
                         </div>
                     @endif
-                    <form action="{{ url('admin/products/update/' . $product->id) }}" method="POST"
+                    <form action="{{ url('admin/products/update/' .$product->id) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('put')

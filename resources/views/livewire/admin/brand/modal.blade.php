@@ -14,6 +14,15 @@
                 <form wire:submit.prevent="store">
                     <div class="modal-body">
                         <div class="mb-3">
+                            <label>Select Category</label>
+                            <select name="category" class="form-control" required>
+                                <option value="">--Select Category--</option>
+                                @foreach ($category as $value)
+                                <option value="{{$value->id}}">{{$value->category_name}}</option>                               
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="mb-2">Brand Name</label>
                             <input type="text" wire:model = "name" name="name" class="form-control form-group">
                             @error('name')
