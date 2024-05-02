@@ -15,13 +15,14 @@ class Index extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     
-    public $name, $slug, $status, $brand_id;
+    public $name, $slug, $status, $brand_id, $category_id;
 
     public function rules(){
         return[
             'name'=> 'required|string',
             'slug'=>'required|string',
-            'status'=>'nullable'
+            'status'=>'nullable',
+            'category_id'=>'required|integer',
         ];
     }
 
@@ -30,20 +31,22 @@ class Index extends Component
         $this->slug = NULL;
         $this->status = NULL;
         $this->brand_id = NULL;
+        $this->category_id = NULL;
     }
     public function render()
     {
         $brands = Brand::orderBy('id','Desc')->paginate(5);
-        $category = Category::get();
+        $category = Category::where('status', 0)->get();
         return view('livewire.admin.brand.index',['brands'=> $brands,'category'=> $category])->extends('layouts.admin')->section('content');
     }
     public function store(){
      
         $validateData = $this->validate();
         Brand::create([
-          'name'=>$this->name,
-          'slug'=>Str::slug($this->slug),
-          'status'=>$this->status === true ? 1 : 0
+            'name'=>$this->name,
+            'slug'=>Str::slug($this->slug),
+            'status'=>$this->status === true ? 1 : 0,
+            'category_id'=>$this->category_id,
         ]);
 
         return redirect('admin/brands')->with('message','Brand Saved Successfully.');
@@ -59,8 +62,9 @@ class Index extends Component
         $this->brand_id = $brandID;
         $brand = Brand::findOrFail($brandID);
         $this->name = $brand->name;
-        $this->slug = $brand->slug; 
+        $this->slug = $brand->slug;   
         $this->status = $brand->status == 1 ? true : false;
+        $this->category_id = $brand->category_id;
     //   dd($this->status);
     }
 
@@ -70,6 +74,7 @@ class Index extends Component
             'name'=> $this->name,
             'slug' => $this->slug,
             'status' => $this->status === true ? 1 : 0,
+            'category_id' => $this->category_id,
         ]);
         return redirect('admin/brands')->with('message','Brand Updated Successfully.');
         $this->resetInput();
