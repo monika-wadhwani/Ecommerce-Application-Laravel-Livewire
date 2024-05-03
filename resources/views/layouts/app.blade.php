@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,12 +20,20 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css" />
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css" />
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/semantic.min.css" />
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/bootstrap.min.css" />
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{asset('asset/css/style.css')}}">
+    <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
     @livewireStyles
 </head>
+
 <body>
     <div id="app">
         {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -86,6 +95,17 @@
             @yield('content')
         </main>
     </div>
-        @livewireScripts
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+    <script>
+        window.addEventListener('livewire:init', () => {
+            Livewire.on('message', (event) => {
+                alertify.set('notifier', 'position', 'top-right');
+                // console.log(event);
+                alertify.notify(event.title, event.type);
+            });
+        });
+    </script>
+    @livewireScripts
 </body>
+
 </html>
