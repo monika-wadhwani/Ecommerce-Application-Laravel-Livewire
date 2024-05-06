@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Our Categories')
+@section('title', 'All Categories')
 
 @section('content')
 
     <div class="py3 py-md-5 bg-light">
-        <div class="container">
+        <div class="container card-container">
             <div class="row">
                 <div class="col-md-12">
                     <h4 class="mb-4">
@@ -14,7 +14,7 @@
                 </div>
                 @forelse ($categories as $category)
                 <div class="col-6 col-md-3">
-                    <div class="category-card">
+                    <div class="category-card cards">
                         <a href=" {{url('collections/'.$category->slug)}} ">
                             <div class="category-card-img">
                                 <img src="{{asset($category->images)}}" class="w-100" alt="category">

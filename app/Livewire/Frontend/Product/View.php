@@ -87,34 +87,62 @@ class View extends Component
         if(Auth::check()){
             // dd($this->product->id);
              // !Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->where('status',0)->exists()              
-                // $this->dispatch('wishlistAddedUpdated');
+
             if($this->product->where('id', $productID)->where('status',0)->exists()){
                 //check product colors available and add to cart
-                if($this->product->productColors->count() > 1){
+                if($this->product->productColors->count() > 0){
                     // dd('product colors');
                     if($this->productColorQuantity != NULL){
+                     //   dd("product color");
                         if(Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->where('product_color_id',$this->productColorId)->exists()){
-                            $cart = Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->where('product_color_id',$this->productColorId)->first();
-                            Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->where('product_color_id',$this->productColorId)->update([
-                                'user_id'=> Auth::user()->id,
-                                'product_id'=>$productID,
-                                'quantity' => $this->quantityCount + $cart->quantity,    
-                            ]);
-                            $this->dispatch('message',
-                                title : 'Product Added To Cart',
-                                type: 'success',
-                                status: 200           
-                            );
+                          
+                            $cartData = Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->where('product_color_id',$this->productColorId)->first();
+
+                            $productColorQuantity = $this->product->productColors->where('id', $this->productColorId)->first();
+
+                            if($productColorQuantity->quantity >= $this->quantityCount){
+
+                                if($cartData->quantity == $productColorQuantity->quantity){
+                                    $this->dispatch('message',
+                                        title : 'Product Already Available in Cart',
+                                        type: 'warning',
+                                        status: 200           
+                                    );
+                                }else{
+                                    Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->where('product_color_id',$this->productColorId)->update([
+                                        'user_id'=> Auth::user()->id,
+                                        'product_id'=>$productID,
+                                        'quantity' => $this->quantityCount + $cartData->quantity,    
+                                    ]);
+                                    $this->dispatch('message',
+                                        title : 'Product Added To Cart',
+                                        type: 'success',
+                                        status: 200           
+                                    );
+                                }
+                               
+                            }else{
+                                // dd($this->quantityCount);
+                                $this->dispatch('message',
+                                    title : 'Only '.$productColorQuantity->quantity.' Quantity Available',
+                                    type: 'warning',
+                                    status: 409         
+                                ); 
+                            }
+                           
                         }else{
                             $productColorQuantity = $this->product->productColors->where('id', $this->productColorId)->first();
+                           
                             if($productColorQuantity->quantity > 0){
-                                if($productColorQuantity->quantity > $this->quantityCount){
+                                if($productColorQuantity->quantity >= $this->quantityCount){
                                     Cart::create([
                                         'user_id'=> Auth::user()->id,
                                         'product_id'=>$productID,
                                         'quantity' => $this->quantityCount,
                                         'product_color_id' => $this->productColorId ?? null                                       
                                     ]);
+
+                                    $this->dispatch('cartAddedUpdated');
 
                                     $this->dispatch('message',
                                         title :'Product Added To Cart',
@@ -150,18 +178,29 @@ class View extends Component
                     }                        
                 }
                 else{      
+                   // dd("product quantity");
                     if(Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->exists()){
-                        $cart = Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->first();
-                        Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->update([
-                            'user_id'=> Auth::user()->id,
-                            'product_id'=>$productID,
-                            'quantity' => $this->quantityCount + $cart->quantity,    
-                        ]);
-                        $this->dispatch('message',
-                            title : 'Product Added To Cart',
-                            type: 'success',
-                            status: 200           
-                        );
+                        if($this->product->quantity > $this->quantityCount){
+                            $cart = Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->first();
+                            Cart::where('user_id', Auth::user()->id)->where('product_id', $productID)->update([
+                                'user_id'=> Auth::user()->id,
+                                'product_id'=>$productID,
+                                'quantity' => $this->quantityCount + $cart->quantity,    
+                            ]);
+                            $this->dispatch('message',
+                                title : 'Product Added To Cart',
+                                type: 'success',
+                                status: 200           
+                            );
+                        }
+                        else{
+                            $this->dispatch('message',
+                            title : 'Only '.$this->product->quantity.' Quantity Available',
+                            type: 'warning',
+                            status: 409         
+                        );   
+                        }
+                       
                     }
                     else
                     {
@@ -172,7 +211,9 @@ class View extends Component
                                     'product_id'=>$productID,
                                     'quantity' => $this->quantityCount,    
                                 ]);
-            
+
+                                $this->dispatch('cartAddedUpdated');
+                                
                                 $this->dispatch('message',
                                     title : 'Product Added To Cart',
                                     type: 'success',

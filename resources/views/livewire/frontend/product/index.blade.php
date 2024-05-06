@@ -1,5 +1,5 @@
 <div>
-    <div class="row">
+    <div class="row ">
         <h5>Filters</h5>
         <div class="col-md-3">
             @if ($category->brands)
@@ -37,7 +37,7 @@
         <div class="col-md-9">
             <div class="row">
                 @forelse ($products as $product)
-                    <div class="col-md-4">
+                    <div class="col-md-4" >
                         <div class="product-card">
                             <div class="product-card-img">
                                 @if ($product->quantity > 0)
