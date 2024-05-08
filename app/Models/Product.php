@@ -26,7 +26,8 @@ class Product extends Model
         'trending',
         'meta_title',
         'meta_keyword',
-        'meta_description'
+        'meta_description',
+        'featured'
     ];
 
     public function products_images(){

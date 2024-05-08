@@ -28,6 +28,15 @@
     <!-- Bootstrap theme -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/bootstrap.min.css" />
 
+    {{-- EXZOOM CSS --}}
+    <link href="{{ asset('asset/exzoom/jquery.exzoom.css') }}" rel="stylesheet">
+
+    {{-- Owl Carousel --}}
+    <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
+    {{-- Owl Carousel --}}
+    
+    
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
@@ -94,6 +103,8 @@
         <main>
             @yield('content')
         </main>
+
+        @include('layouts.frontend.footer')
     </div>
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
     <script>
@@ -105,6 +116,16 @@
             });
         });
     </script>
+    {{-- OWL Scripts --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script src="{{ asset('asset/js/owl.carousel.min.js') }}"></script>
+
+    <script src="{{ asset('asset/exzoom/jquery.exzoom.js') }}"></script>
+
+    @yield('script')
+
     @livewireScripts
     @stack('scripts')
 </body>

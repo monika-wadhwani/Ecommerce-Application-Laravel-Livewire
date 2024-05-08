@@ -104,7 +104,6 @@
                                                     Payment)</button> --}}
                                                 <div>
                                                     <div id="paypal-button-container"></div>
-                                                    <p id="result-message"></p>
                                                 </div>
 
                                             </div>
@@ -133,120 +132,47 @@
         src="https://www.paypal.com/sdk/js?client-id=AfXO2KxWbqBTCkfjgm_1dyZYfhTgJ8KodBt3NR0_2UdbZcQ71q6qAKMFdNamak_Z9B2fbRCbeBCACYr-&currency=USD">
     </script>
     <script>
-        window.paypal
-            .Buttons({
-                onClick() {
-                    // Show a validation error if the checkbox isn't checked
-                    if (!document.getElementById("name").value ||
-                        !document.getElementById("phone_no").value ||
-                        !document.getElementById("email").value ||
-                        !document.getElementById("pincode").value ||
-                        !document.getElementById("address").value
-                    ){
-                        Livewire.dispatch('validationForAll');
-                        return false;
-                    }else{
-                        @this.set('name',document.getElementById("name").value),
-                        @this.set('phone_no',document.getElementById("phone_no").value),
-                        @this.set('email',document.getElementById("email").value),
-                        @this.set('pincode',document.getElementById("pincode").value),
-                        @this.set('address',document.getElementById("address").value)
-                    }
-                },
-                async createOrder() {
-                    try {
-                        const amount = 0.012; // Replace with your desired amount
-                        const currency = 'USD';
-
-                        const response = await fetch("/api/orders", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            // use the "body" param to optionally pass additional order information
-                            // like product ids and quantities
-                            body: JSON.stringify({
-                                cart: [{
-                                    id: "YOUR_PRODUCT_ID",
-                                    quantity: "YOUR_PRODUCT_QUANTITY",
-                                    amount: amount,
-                                    currency: currency,
-                                }, ],
-                            }),
-                        });
-
-                        const orderData = await response.json();
-
-                        if (orderData.id) {
-                            return orderData.id;
-                        } else {
-                            const errorDetail = orderData?.details?.[0];
-                            const errorMessage = errorDetail ?
-                                `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})` :
-                                JSON.stringify(orderData);
-
-                            throw new Error(errorMessage);
+        window.paypal.Buttons({
+            onClick() {
+                // Show a validation error if the checkbox isn't checked
+                if (!document.getElementById("name").value ||
+                    !document.getElementById("phone_no").value ||
+                    !document.getElementById("email").value ||
+                    !document.getElementById("pincode").value ||
+                    !document.getElementById("address").value
+                ) {
+                    window.dispatchEvent(new CustomEvent('validationForAll'));
+                    return false;
+                } else {
+                    @this.set('name', document.getElementById("name").value),
+                        @this.set('phone_no', document.getElementById("phone_no").value),
+                        @this.set('email', document.getElementById("email").value),
+                        @this.set('pincode', document.getElementById("pincode").value),
+                        @this.set('address', document.getElementById("address").value)
+                }
+            },
+            createOrder: function(data, actions) {
+                // Create order logic
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '0.1' // Example amount
                         }
-                    } catch (error) {
-                        console.error(error);
-                        resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                // Capture payment logic
+                return actions.order.capture().then(function(details) {
+                    // Payment successful, update UI
+                  
+                    const transaction = orderData.purchase_units[0].payment.captures[0];
+                    alert(`Tranaction ${transaction.status}: ${transaction.id}\n\nSee console for more details`);
+                    if(transaction.status == 'COMPLETED'){
+                        window.dispatchEvent(new CustomEvent('paymentConfirmation',transaction.id));
                     }
-                },
-                async onApprove(data, actions) {
-                    try {
-                        const response = await fetch(`/api/orders/${data.orderID}/capture`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        });
-
-                        const orderData = await response.json();
-                        // Three cases to handle:
-                        //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                        //   (2) Other non-recoverable errors -> Show a failure message
-                        //   (3) Successful transaction -> Show confirmation or thank you message
-
-                        const errorDetail = orderData?.details?.[0];
-
-                        if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                            // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                            // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-                            return actions.restart();
-                        } else if (errorDetail) {
-                            // (2) Other non-recoverable errors -> Show a failure message
-                            throw new Error(`${errorDetail.description} (${orderData.debug_id})`);
-                        } else if (!orderData.purchase_units) {
-                            throw new Error(JSON.stringify(orderData));
-                        } else {
-                            // (3) Successful transaction -> Show confirmation or thank you message
-                            // Or go to another URL:  actions.redirect('thank_you.html');
-                            const transaction =
-                                orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
-                                orderData?.purchase_units?.[0]?.payments?.authorizations?.[0];
-                            resultMessage(
-                                `Transaction ${transaction.status}: ${transaction.id}<br><br>See console for all available details`,
-                            );
-                            console.log(
-                                "Capture result",
-                                orderData,
-                                JSON.stringify(orderData, null, 2),
-                            );
-                        }
-                    } catch (error) {
-                        console.error(error);
-                        resultMessage(
-                            `Sorry, your transaction could not be processed...<br><br>${error}`,
-                        );
-                    }
-                },
-            })
-            .render("#paypal-button-container");
-
-        // Example function to show a result to the user. Your site's UI library can be used instead.
-        function resultMessage(message) {
-            const container = document.querySelector("#result-message");
-            container.innerHTML = message;
-        }
+                });
+            }
+        }).render('#paypal-button-container');
     </script>
 @endpush

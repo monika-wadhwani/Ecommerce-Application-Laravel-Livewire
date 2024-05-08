@@ -12,11 +12,37 @@ use Illuminate\Validation\Rule as ValidationRule;
 
 class Index extends Component
 {
-    public $cart, $totalPriceAmount = 0;
+    public $cart, $totalPriceAmount;
 
     public $name, $email, $address, $phone_no, $pincode, $payment_mode = Null, $payment_id = NULL;
 
-    #[On('validationForAll')]
+    protected $listeners = ['validationForAll','paymentConfirmation'=>'paidOnlineOrder'];
+
+    public function paidOnlineOrder($value){
+        $this->payment_id = $value;
+        $this->payment_mode = "Paid by Paypal";
+        $codOrder = $this->placeOrder();
+        if($codOrder){
+            Cart::where('user_id', Auth::user()->id)->delete();
+            session()->flash('message','Order Placed Successfully.');
+            $this->dispatch('message',
+                title : 'Order Placed Successfully',
+                type: 'success',
+                status: 200        
+            );
+            return redirect('thank-you');
+        }
+        else{
+            $this->dispatch('message',
+                title : 'Something Went Wrong, Try again later',
+                type: 'error',
+                status: 500        
+            ); 
+        }
+
+    }
+
+   
     public function validationForAll(){
         $this->validate();
     }
@@ -89,6 +115,7 @@ class Index extends Component
     }
 
     public function totalCount(){
+        $this->totalPriceAmount = 0;
         $this->cart = Cart::where('user_id', Auth::user()->id)->get();
         foreach($this->cart as $cartItem){
          $this->totalPriceAmount += $cartItem->product->selling_price * $cartItem->quantity;

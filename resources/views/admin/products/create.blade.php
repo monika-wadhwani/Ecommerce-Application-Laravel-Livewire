@@ -122,6 +122,10 @@
                                         <input type="checkbox" name="trending" style="width:20px; height:20px">
                                     </div>
                                     <div class="col-md-4 mb-3">
+                                        <label class="mb-2">Featured</label>
+                                        <input type="checkbox" name="featured" style="width:20px; height:20px">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <label class="mb-2">Original Price</label>
                                         <input type="number" name="original_price" class="form-control form-group">
                                     </div>

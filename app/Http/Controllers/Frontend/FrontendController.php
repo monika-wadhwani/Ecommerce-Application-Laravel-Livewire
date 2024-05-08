@@ -12,7 +12,8 @@ class FrontendController extends Controller
 {
     public function index(){
         $sliders = Slider::where('status',0)->get();
-        return view('frontend.index',compact('sliders'));
+        $trendingProducts = Product::where('trending',1)->latest()->take(15)->get();
+        return view('frontend.index',compact('sliders','trendingProducts'));
     }
 
     public function categories(){
@@ -50,5 +51,20 @@ class FrontendController extends Controller
 
     public function thankYou(){
         return view('frontend.thank-you');
+    }
+
+    public function newArrival(){
+        $newArrivalProducts = Product::latest()->take(5)->get();
+        return view('frontend.pages.new_arrival',compact('newArrivalProducts'));
+
+    }
+
+    public function featuredProducts(){
+        $featuredProducts = Product::where('featured',1)->latest()->get();
+        return view('frontend.pages.featured_products',compact('featuredProducts'));
+    }
+
+    public function footer(){
+        return view('layouts.frontend.footer');
     }
 }

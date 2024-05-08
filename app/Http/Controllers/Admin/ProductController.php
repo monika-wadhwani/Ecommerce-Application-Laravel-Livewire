@@ -46,6 +46,7 @@ class ProductController extends Controller
             'meta_description' => $validated_data['meta_description'],
             'status' => $request->status == true ? 1 : 0,
             'trending' => $request->trending == true ? 1 : 0,
+            'featured' => $request->featured == true ? 1 : 0,
         ]);
 
        // return $product->id; die;
@@ -108,6 +109,7 @@ class ProductController extends Controller
                 'meta_description' => $validated_data['meta_description'],
                 'status' => $request->status == true ? 1 : 0,
                 'trending' => $request->trending == true ? 1 : 0,
+                'featured' => $request->featured == true ? 1 : 0,
             ]);
 
             if($request->hasFile('images')){

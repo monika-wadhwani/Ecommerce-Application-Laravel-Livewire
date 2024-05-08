@@ -10,7 +10,12 @@ use Illuminate\Support\Facades\Auth;
 class View extends Component
 {
     public $category, $product, $productColorQuantity, $quantityCount = 1, $productColorId;
-
+    
+    public function render()
+    {
+        return view('livewire.frontend.product.view',['category'=>$this->category, 'product'=>$this->product]);
+    }
+    
     public function decrementQuantity(){
         if($this->quantityCount > 1){
             $this->quantityCount--;
@@ -27,10 +32,7 @@ class View extends Component
         $this->category = $category;
         $this->product = $product;
     }
-    public function render()
-    {
-        return view('livewire.frontend.product.view',['category'=>$this->category, 'product'=>$this->product]);
-    }
+   
     public function selectedColor($colorId){
         $this->productColorId = $colorId;  
         $productColor = $this->product->productColors()->where('id',$colorId)->first();

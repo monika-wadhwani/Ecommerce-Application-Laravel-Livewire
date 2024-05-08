@@ -134,6 +134,12 @@
                                             style="width:20px; height:20px">
                                     </div>
                                     <div class="col-md-4 mb-3">
+                                        <label class="mb-2">Featured</label>
+                                        <input type="checkbox" name="featured"
+                                            {{ $product->featured == 1 ? 'checked' : '' }}
+                                            style="width:20px; height:20px">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <label class="mb-2">Original Price</label>
                                         <input type="number" name="original_price"
                                             value = "{{ $product->original_price }}" class="form-control form-group">

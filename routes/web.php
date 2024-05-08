@@ -16,11 +16,16 @@ Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class,'index'
 Route::get('/collections', [App\Http\Controllers\Frontend\FrontendController::class,'categories']);
 Route::get('/collections/{category_slug}', [App\Http\Controllers\Frontend\FrontendController::class,'category_products']);
 Route::get('/collections/{category_slug}/{product_slug}', [App\Http\Controllers\Frontend\FrontendController::class,'productView']);
+Route::get('new_arrivals',[App\Http\Controllers\Frontend\FrontendController::class,'newArrival']);
+Route::get('featured_products',[App\Http\Controllers\Frontend\FrontendController::class,'featuredProducts']);
+Route::get('footer',[App\Http\Controllers\Frontend\FrontendController::class,'footer']);
 
 Route::middleware('auth')->group(function (){
     Route::get('wishlist',[App\Http\Controllers\Frontend\WishlistController::class,'index']);
     Route::get('cart', [App\Http\Controllers\Frontend\CartListController::class,'index']);
     Route::get('checkout', [App\Http\Controllers\Frontend\CheckoutController::class,'index']);
+    Route::get('myOrders', [App\Http\Controllers\Frontend\OrderController::class,'myOrders']);
+    Route::get('orders/{order_id}', [App\Http\Controllers\Frontend\OrderController::class,'viewOrders']);
 });
 
 Route::get('thank-you',[App\Http\Controllers\Frontend\FrontendController::class,'thankYou']);
@@ -79,6 +84,14 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function () {
         Route::get('/sliders/delete/{slider}', 'delete');
     });
 
+    
+    Route::controller(App\Http\Controllers\Admin\OrderController::class)->group(function () {
+        Route::get('orders', 'allOrders');
+        Route::get('show_orders/{order_id}','viewOrders');
+        Route::put('show_orders/{order_id}','updateOrder');
+        Route::get('view_invoice/{order_id}','viewInvoice');
+        Route::get('generate_invoice/{order_id}','generateInvoice');
+    });
 
 });
 
