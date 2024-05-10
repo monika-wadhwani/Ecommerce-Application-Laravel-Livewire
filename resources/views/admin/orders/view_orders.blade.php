@@ -13,11 +13,16 @@
                 <div class="card-header">
                     <h4 class="fonts">
                         <i class="fa fa-shopping-cart text-dark"></i>
-                        <a href="{{ url('admin/orders') }}" class="float-end text-white btn btn-primary">Back</a>
-                        <a href="{{ url('admin/generate_invoice/'.$order->id) }}" class="float-end text-white mr-2 btn btn-primary">Download
-                            Invoice (PDF)</a>
-                        <a href="{{ url('admin/view_invoice/'.$order->id) }}" target="_blank" class="float-end mr-2 btn btn-warning">View
-                            Invoice</a>
+                        <a href="{{ url('admin/orders') }}" class="float-end text-white btn btn-primary">
+                            <span class="fa fa-arrow-left"></span> Back</a>
+                        <a href="{{ url('admin/generate_invoice/' .$order->id) }}"
+                            class="float-end text-white mr-2 btn btn-primary">
+                            <span class="fa fa-download"></span> Download Invoice (PDF)</a>
+                        <a href="{{ url('admin/view_invoice/' .$order->id) }}" target="_blank"
+                            class="float-end mr-2 btn btn-warning"><span class="fa fa-eye"></span> View Invoice</a>
+                        <a href="{{ url('admin/mail_invoice/' .$order->id) }}"
+                            class="float-end mr-2 btn btn-info"><span class="fa fa-eye"></span> Send Invoice via
+                            Mail</a>
                         My Order Details
                     </h4>
                 </div>

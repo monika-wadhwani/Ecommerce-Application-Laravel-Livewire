@@ -63,7 +63,7 @@
                                         {{ $category->status == 1 ? 'Hidden' : 'Visible' }}
                                     </td>
                                     <td>
-                                        <a href="{{ url('admin/edit/' . $category->id) }}"
+                                        <a href="{{ url('admin/category/edit/' . $category->id) }}"
                                             class="btn btn-success">Edit</a>
                                         <a href="#" wire:click="destroyCategory({{$category->id}})" data-toggle="modal" data-target="#deletedModal"
                                             class="btn btn-danger">Delete</a>

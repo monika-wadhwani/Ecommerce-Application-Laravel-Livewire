@@ -7,7 +7,9 @@ use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderItem;
 use Illuminate\Support\Str;
+use App\Mail\PlaceOrderMailable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule as ValidationRule;
 
 class Index extends Component
@@ -30,6 +32,13 @@ class Index extends Component
                 type: 'success',
                 status: 200        
             );
+            try{
+                $order = Order::findOrFail($codOrder->id);
+                $mail_id = "monikaw654.mw@gmail.com";
+                Mail::to($mail_id)->send(new PlaceOrderMailable($order));
+            }catch(\Exception $e){
+                //something went wrong
+            }
             return redirect('thank-you');
         }
         else{
@@ -52,8 +61,8 @@ class Index extends Component
             'name' => 'required|string|max:121',
             'email' => 'required|email|max:121',
             'address' => 'required|max:500|string',
-            'phone_no' => 'required|max:11|min:10|string',
-            'pincode' => 'required|max:6|min:6|string',
+            'phone_no' => 'required|max:11|min:10',
+            'pincode' => 'required|max:6|min:6',
         ];
     }
 
@@ -103,6 +112,13 @@ class Index extends Component
                 type: 'success',
                 status: 200        
             );
+            try{
+                $order = Order::findOrFail($codOrder->id);
+                $mail_id = "monikaw654.mw@gmail.com";
+                Mail::to($mail_id)->send(new PlaceOrderMailable($order));
+            }catch(\Exception $e){
+                //something went wrong
+            }
             return redirect('thank-you');
         }
         else{
@@ -126,7 +142,12 @@ class Index extends Component
     {   
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->phone_no = Auth::user()->profile->phone ?? null;
+        $this->pincode = Auth::user()->profile->pincode ?? null;
+        $this->address = Auth::user()->profile->address ?? null;
         $this->totalPriceAmount = $this->totalCount();
+
+        
         return view('livewire.frontend.checkout.index',['totalPriceAmount'=> $this->totalPriceAmount]);
     }
 }

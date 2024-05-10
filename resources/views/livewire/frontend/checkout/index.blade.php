@@ -165,11 +165,13 @@
                 // Capture payment logic
                 return actions.order.capture().then(function(details) {
                     // Payment successful, update UI
-                  
+
                     const transaction = orderData.purchase_units[0].payment.captures[0];
-                    alert(`Tranaction ${transaction.status}: ${transaction.id}\n\nSee console for more details`);
-                    if(transaction.status == 'COMPLETED'){
-                        window.dispatchEvent(new CustomEvent('paymentConfirmation',transaction.id));
+                    alert(
+                        `Tranaction ${transaction.status}: ${transaction.id}\n\nSee console for more details`
+                        );
+                    if (transaction.status == 'COMPLETED') {
+                        window.dispatchEvent(new CustomEvent('paymentConfirmation', transaction.id));
                     }
                 });
             }

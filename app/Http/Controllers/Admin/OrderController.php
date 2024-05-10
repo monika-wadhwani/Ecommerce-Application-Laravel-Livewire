@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\InvoiceOrderMailable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -16,7 +18,7 @@ class OrderController extends Controller
         $orders = Order::when($request->date != null, function($query) use($request){
                             return $query->whereDate('created_at',$request->date);
                         },function($query) use($todayDate){
-                            $query->whereDate('created_at',$todayDate);  
+                            $query->whereDate('created_at','like','%%');  
                         })
                         ->when($request->status != null, function($query) use($request){
                             return $query->where('status_message',$request->status);
@@ -56,5 +58,17 @@ class OrderController extends Controller
      
         $todayDate = Carbon::now()->format('d-m-Y');
         return $pdf->download('invoice-'.$order_id.'-'.$todayDate.'.pdf');
+    }
+
+    public function generateMailInvoice($order_id){
+        try{           
+            $order = Order::findOrFail($order_id);
+            $mail_id = "monikaw654.mw@gmail.com";
+            Mail::to($mail_id)->send(new InvoiceOrderMailable($order));
+            return redirect('admin/show_orders/'.$order_id)->with('message','Invoice Mail Has been sent to '.$mail_id);
+        }
+        catch(\Exception $e){
+            return redirect('admin/show_orders/'.$order_id)->with('message','Something Went Wrong.'.$e);
+        }
     }
 }

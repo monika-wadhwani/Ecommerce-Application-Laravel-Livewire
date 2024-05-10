@@ -33,7 +33,7 @@ class LoginController extends Controller
             return redirect('admin/dashboard')->with('message','Welcome to Dashboard');
         }
         else{
-            return redirect('home')->with('status','Welcome to Home Page');
+            return redirect('collections')->with('status','Welcome to Modish');
         }
     }
 

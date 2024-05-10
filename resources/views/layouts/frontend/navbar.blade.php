@@ -3,12 +3,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
-                    <h5 class="brand-name">Modish</h5>
+                    <h5 class="brand-name">{{$appSetting->website_name ?? 'website name'}}</h5>
                 </div>
                 <div class="col-md-5 my-auto">
-                    <form role="search">
+                    <form action="{{ url('search') }}" method="GET" role="search">
                         <div class="input-group">
-                            <input type="search" placeholder="Search your product" class="form-control" />
+                            <input type="search" name="search" value="{{ Request::get('search')}}" placeholder="Search your product" class="form-control" />
                             <button class="btn bg-white" type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -47,8 +47,8 @@
                                     <i class="fa fa-user"></i> {{ Auth::user()->name }}
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fa fa-list"></i> My Orders</a>
+                                    <li><a class="dropdown-item" href="{{ url('profile') }}"><i class="fa fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('myOrders') }}"><i class="fa fa-list"></i> My Orders</a>
                                     </li>
                                     <li><a class="dropdown-item" href="#"><i class="fa fa-heart"></i> My Wishlist</a>
                                     </li>

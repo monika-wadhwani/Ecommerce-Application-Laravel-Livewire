@@ -178,7 +178,7 @@
 .product-card .product-card-img {
     max-height: 260px;
     overflow: hidden;
-    border-bottom: 1px solid #ccc;
+    /* border-bottom: 1px solid #ccc; */
 }
 
 .product-card .product-card-img img {
@@ -409,6 +409,7 @@
 /* Footer CSS */
 
 .footer-area{
+    height: 40%;
     padding: 40px 0px;
     background-color: #2874f0;
     color: #fff;
